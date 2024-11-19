@@ -1,0 +1,257 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+/* Body and Container Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to right, #00bcd4, #00796b); /* Gradient background */
+  color: #333;
+  padding: 20px;
+  transition: all 0.3s ease;
+  overflow-x: hidden;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Sticky Navbar */
+nav {
+  background-color: #333;
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 12px 20px;
+  margin: 0 15px;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.2s;
+}
+
+nav a:hover {
+  background-color: #4caf50;
+  transform: scale(1.1);
+}
+
+/* Header Styling */
+h3 {
+  font-family: 'Roboto', sans-serif;
+  color: #08090b;
+  margin-bottom: 20px;
+  text-align: center;
+}
+h3 {
+  font-family: 'Roboto', sans-serif;
+  color: #08090b;
+  margin-bottom: 20px;
+  text-align: center;
+}
+/* Flex container for the dashboard */
+.dashboard {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  margin-top: 30px;
+  flex-wrap: wrap; /* Makes it responsive */
+}
+
+/* Employee Data Section */
+.employee-data {
+  flex: 2;
+  background-color: rgb(253, 253, 253);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Table Styling */
+.table th, .table td {
+  padding: 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #b8dce7;
+  color: #333;
+  font-weight: bold;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+  background-color: #76b5df;
+}
+
+.table-bordered {
+  border: 2px solid #ddd;
+}
+
+.table tr:hover {
+  background-color: #f1f1f1; /* Hover effect */
+}
+
+/* Add Employee Form Section */
+.add-employee-form {
+  flex: 1;
+  background-color: #79c2dc;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  margin-bottom: 20px;
+}
+
+.add-employee-form h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.add-employee-form label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #444;
+}
+
+.add-employee-form input[type="text"],
+.add-employee-form input[type="email"],
+.add-employee-form input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.add-employee-form input[type="text"]:focus,
+.add-employee-form input[type="email"]:focus,
+.add-employee-form input[type="password"]:focus {
+  border-color: #4CAF50;
+  outline: none;
+}
+
+.add-employee-form input[type="submit"] {
+  padding: 15px 25px;
+  background-color: #10688a;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.add-employee-form input[type="submit"]:hover {
+  background-color: #63dbf5;
+}
+
+/* Card Design for Employee Data */
+.employee-data .employee-card {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.employee-card h4 {
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.employee-card p {
+  color: #555;
+  font-size: 16px;
+}
+
+/* Table Row Animation */
+@keyframes fadeInRows {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+.table tr {
+  animation: fadeInRows 1s ease-in-out;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #060906;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard {
+      flex-direction: column;
+  }
+
+  .employee-data, .add-employee-form {
+      width: 100%;
+  }
+
+  .add-employee-form input[type="submit"] {
+      width: 100%;
+  }
+
+  .employee-card {
+      padding: 15px;
+  }
+}

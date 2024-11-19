@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analyst Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='analyst.css') }}">
+</head>
+<body>
+    <h2>Welcome, Analyst</h2>
+    
+    <!-- Summary Metrics -->
+    <div class="dashboard-summary">
+        <div class="metric">
+            <h3>Total Sales</h3>
+            <p>Rs{{ total_sales }}</p>
+        </div>
+        <div class="metric">
+            <h3>Total Customers</h3>
+            <p>{{ total_customers }}</p>
+        </div>
+        <div class="metric">
+            <h3>Total Products Sold</h3>
+            <p>{{ total_products_sold }}</p>
+        </div>
+        <div class="metric">
+            <h3>Average Order Value (AOV)</h3>
+            <p>Rs{{ avg_order_value }}</p>
+        </div>
+    </div>
+    
+
+
+   
+    <!-- Query Selection Buttons -->
+    <div style="display: flex; justify-content: center; align-items: center; height: 10vh; gap: 20px;">
+        <button onclick="showQueryOptions('sales_analysis')">Sales Analysis</button>
+        <button onclick="showQueryOptions('customer_insights')">Customer Insights</button>
+        <button onclick="showQueryOptions('product_performance')">Product Performance</button>
+    </div>
+
+    <!-- Query Options Dropdown (existing code) -->
+    <div id="queryOptions" style="display:none;">
+        <label for="queryDropdown">Select Query:</label>
+        <select id="queryDropdown"></select>
+
+        <!-- Radio Buttons for Chart Type -->
+        <div>
+            <label>Select Chart Type:</label>
+            <input type="radio" id="bar" name="chartType" value="bar" checked>
+            <label for="bar">Bar Chart</label>
+            <input type="radio" id="line" name="chartType" value="line">
+            <label for="line">Line Chart</label>
+            <input type="radio" id="pie" name="chartType" value="pie">
+            <label for="pie">Pie Chart</label>
+        </div>
+
+        <button onclick="runQuery()">Run Query</button>
+    </div>
+
+    <!-- Results Section (existing code) -->
+    <div id="results">
+        <h3>Results</h3>
+        <img id="queryResultChart" src="" alt="Query Result Chart" style="display: none;">
+    </div>
+
+    <!-- Query Options Dropdown -->
+    <div id="queryOptions" style="display:none;">
+        <label for="queryDropdown">Select Query:</label>
+        <select id="queryDropdown"></select>
+        <button onclick="runQuery()">Run Query</button>
+    </div>
+
+    <!-- Results Section for Chart Display -->
+    <div id="results">
+        
+        <img id="queryResultChart" src="" alt="Query Result Chart" style="display: none; max-width: 100%; height: auto;">
+    </div>
+
+    <script>
+        // Query options for each category
+        const queryOptions = {
+            "sales_analysis": [
+                { value: "total_sales_by_month", text: "Total Sales by Month" },
+                { value: "average_sales_by_customer", text: "Average Sales by Customer" },
+                { value: "monthly_quantity_sold", text: "Monthly Quantity Sold" },
+                { value: "top_customers_by_sales", text: "Top Customers by Sales" },
+                { value: "sales_by_day", text: "Sales by Day" },
+                { value: "total_sales_join_customers", text: "Total Sales with Customer Info (Join)" },
+                //{ value: "average_sales_all_customers", text: "Average Sales across All Customers (Aggregate)" },
+                { value: "sales_above_avg_by_customer", text: "Customers with Sales Above Average (Nested)" }
+            ],
+            "customer_insights": [
+                { value: "total_customers_by_type", text: "Total Customers by Type" },
+                { value: "customer_purchase_frequency", text: "Customer Purchase Frequency" },
+                { value: "average_spent_per_customer_type", text: "Average Spent per Customer Type" },
+                { value: "recent_active_customers", text: "Recent Active Customers" },
+                { value: "new_customers_last_month", text: "New Customers Last Month" },
+                { value: "customer_join_sales", text: "Customers with Total Sales (Join)" },
+                { value: "highest_spending_customers", text: "Highest Spending Customers (Aggregate)" },
+                //{ value: "customers_above_avg_spent", text: "Customers Above Average Spending (Nested)" }
+            ],
+            "product_performance": [
+                { value: "total_sales_by_product", text: "Total Sales by Product" },
+                { value: "top_5_selling_products", text: "Top 5 Selling Products" },
+                { value: "revenue_per_product", text: "Revenue per Product" },
+                { value: "average_quantity_sold_per_product", text: "Average Quantity Sold per Product" },
+                { value: "daily_sales_per_product", text: "Daily Sales per Product" },
+                { value: "product_sales_join_customer", text: "Product Sales with Customer Data (Join)" },
+                //{ value: "total_quantity_sold", text: "Total Quantity Sold (Aggregate)" },
+                //{ value: "products_above_avg_sales", text: "Products Above Average Sales (Nested)" }
+            ]
+        };
+        // Show query options based on the selected category
+        function showQueryOptions(queryType) {
+            const dropdown = document.getElementById("queryDropdown");
+            dropdown.innerHTML = queryOptions[queryType]
+                .map(opt => `<option value="${opt.value}">${opt.text}</option>`)
+                .join("");
+            document.getElementById("queryOptions").style.display = "block";
+            document.getElementById("queryOptions").setAttribute("data-query-type", queryType);
+        }
+
+        // Run the selected query and fetch results
+        function runQuery() {
+            const queryType = document.getElementById("queryOptions").getAttribute("data-query-type");
+            const queryOption = document.getElementById("queryDropdown").value;
+            const chartType = document.querySelector('input[name="chartType"]:checked').value;
+
+            fetch('/execute_query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query_type: queryType, query_option: queryOption, chart_type: chartType })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("queryResultChart").src = "data:image/png;base64," + data.plot_url;
+                document.getElementById("queryResultChart").style.display = "block";
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+
+    <!-- Logout Button -->
+    <button  onclick="window.location.href='{{ url_for('login') }}'">Logout</button>
+    
+</body>
+</html>

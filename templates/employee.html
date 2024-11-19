@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="static/employee.css">
+</head>
+<body>
+    <h1>ADD SALES</h1>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <!-- Form 1: Add New Customer and Purchase -->
+        <div class="form-box">
+            <h2>Add New Customer and Purchase</h2>
+            <form action="{{ url_for('add_new_customer_purchase') }}" method="POST">
+                <label for="name">Customer Name:</label>
+                <input type="text" name="name" required>
+                
+                <label for="gender">Gender:</label>
+                <select name="gender" required>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+
+                <label for="phone">Phone Number:</label>
+                <input type="text" name="phone">
+
+                <label for="email">Email:</label>
+                <input type="email" name="email">
+
+                <label for="custom_type">Customer Type:</label>
+                <select name="custom_type" required>
+                    <option value="Regular">Regular</option>
+                    <option value="VIP">VIP</option>
+                    <option value="New">New</option>
+                    <option value="Returning">Returning</option>
+                </select>
+
+                <label for="product_id">Product:</label>
+                <select name="product_id" required>
+                    {% for product in products %}
+                        <option value="{{ product.Prod_ID }}">{{ product.Prod_Name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" required>
+
+                <label for="date">Date:</label>
+                <input type="date" name="date" required>
+
+                <button type="submit">Add New Customer Purchase</button>
+            </form>
+        </div>
+
+        <!-- Form 2: Add Purchase for Existing Customer -->
+        <div class="form-box">
+            <h2>Add Purchase for Existing Customer</h2>
+            <form action="{{ url_for('add_existing_customer_purchase') }}" method="POST">
+                <label for="customer_name">Customer Name:</label>
+                <input type="text" name="customer_name" required>
+
+                <label for="product_id">Product:</label>
+                <select name="product_id" required>
+                    {% for product in products %}
+                        <option value="{{ product.Prod_ID }}">{{ product.Prod_Name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="quantity">Quantity:</label>
+                <input type="number" name="quantity" required>
+
+                <label for="date">Date:</label>
+                <input type="date" name="date" required>
+
+                <button type="submit">Add Purchase</button>
+            </form>
+        </div>
+    </div>
+    <button onclick="window.location.href='/employee_dashboard'">Return to Dashboard</button>
+
+</body>
+</html>

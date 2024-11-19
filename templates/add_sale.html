@@ -1,0 +1,223 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+
+<form method="POST" action="{{ url_for('add_sale') }}">
+    <label for="customer_type">Customer Type:</label>
+    <select name="customer_type" id="customer_type" onchange="showCustomerFields(this.value)">
+        <option value="existing">Existing Customer</option>
+        <option value="new">New Customer</option>
+    </select>
+
+    <!-- Existing Customer Fields -->
+    <div id="existing_customer_fields" style="display:none;">
+        <label for="custom_id">Customer ID:</label>
+        <input type="text" name="custom_id" id="custom_id" onblur="fetchCustomerDetails()">
+        <label for="customer_name">Or Customer Name:</label>
+        <input type="text" name="customer_name" id="customer_name" onblur="fetchCustomerDetails()">
+    </div>
+
+    <!-- Customer Details Display (for existing customers) -->
+    <div id="customer_details" style="display:none;">
+        <p><strong>Name:</strong> <span id="customer_name_display"></span></p>
+        <p><strong>Phone Number:</strong> <span id="customer_phone_display"></span></p>
+        <p><strong>Customer Type:</strong> <span id="customer_type_display"></span></p>
+    </div>
+
+    <!-- New Customer Fields -->
+    <div id="new_customer_fields" style="display:none;">
+        <label for="name">Name:</label>
+        <input type="text" id="name">
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        
+        <label for="gender">Gender:</label>
+        <select id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label for="phone_no">Phone Number:</label>
+        <input type="text" id="phone_no">
+        
+        <label for="custom_type">Customer Type:</label>
+        <select id="custom_type">
+            <option value="Regular">Regular</option>
+            <option value="Premium">Premium</option>
+            <option value="New">New</option>
+            <option value="VIP">VIP</option>
+        </select>
+        
+        <button type="button" onclick="addCustomer()">Add Customer</button>
+    </div>
+
+    <!-- Product Details Section -->
+    <div id="product_section">
+        <label for="product_id">Product ID:</label>
+        <input type="text" id="product_id" name="product_id" onblur="fetchProductDetails()">
+    
+        <!-- Product Details Display -->
+        <div id="product_info" style="display:none;">
+            <p><strong>Product Name:</strong> <span id="product_name_display"></span></p>
+            <p><strong>Unit Price:</strong> $<span id="unit_price_display"></span></p>
+            
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" oninput="calculateTotalAmount()">
+            
+            <p><strong>Total Amount:</strong> $<span id="total_amount_display">0.00</span></p>
+        </div>
+        <label for="payment_mode">Payment Mode:</label>
+        <select name="payment_mode" id="payment_mode" required>
+            <option value="Cash">Cash</option>
+            <option value="Debit">Debit</option>
+            <option value="Credit">Credit</option>
+        </select>
+    </div>
+    
+    <button type="button" onclick="submitSaleData()">Submit Sale</button>
+</form>
+
+
+
+<script>
+// Function to submit the sale data
+function submitSaleData() {
+    alert("Submit Sale button clicked");
+
+    const customerId = document.getElementById('customer_id').value;
+    const productId = document.getElementById('product_id').value;
+    const quantity = document.getElementById('quantity').value;
+    const totalAmount = document.getElementById('total_amount_display').textContent;
+    const employeeId = "{{ session['user_id'] }}";
+
+    // Input validation
+    if (!customerId || !productId || !quantity) {
+        alert("Please fill in all fields and check product/customer details before submitting.");
+        return;
+    }
+
+    // Log for debugging
+    console.log("Submitting sale data:", { customerId, productId, quantity, totalAmount, employeeId });
+
+    // AJAX call to submit data
+    fetch('/add_sale_data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            customer_id: customerId,
+            product_id: productId,
+            quantity: quantity,
+            total_amount: totalAmount,
+            employee_id: employeeId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Server response:", data);
+        if (data.success) {
+            alert("Sale data added successfully!");
+
+            // Clear fields after successful submission
+            document.getElementById('customer_id').value = '';
+            document.getElementById('product_id').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('total_amount_display').textContent = '0.00';
+        } else {
+            alert(data.error || "Failed to add sale data.");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("An error occurred. Please try again.");
+    });
+}
+
+</script>
+
+<script>
+function showCustomerFields(customerType) {
+    document.getElementById('existing_customer_fields').style.display = customerType === 'existing' ? 'block' : 'none';
+    document.getElementById('new_customer_fields').style.display = customerType === 'new' ? 'block' : 'none';
+    document.getElementById('customer_details').style.display = 'none';
+    document.getElementById('product_entry').style.display = 'none'; // Hide product entry until customer is added
+}
+
+function fetchCustomerDetails() {
+    const customerId = document.getElementById('custom_id').value;
+    const customerName = document.getElementById('customer_name').value;
+
+    fetch('/fetch_customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer_id: customerId, customer_name: customerName })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+        } else {
+            document.getElementById('customer_name_display').textContent = data.Name;
+            document.getElementById('customer_phone_display').textContent = data.Phone_No;
+            document.getElementById('customer_type_display').textContent = data.Custom_Type;
+            document.getElementById('customer_details').style.display = 'block';
+            document.getElementById('product_entry').style.display = 'block'; // Show product entry for existing customer
+        }
+    });
+}
+
+function addCustomer() {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const gender = document.getElementById('gender').value;
+    const phone_no = document.getElementById('phone_no').value;
+    const custom_type = document.getElementById('custom_type').value;
+
+    fetch('/add_customer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, gender: gender, phone_no: phone_no, custom_type: custom_type })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.custom_id) {
+            alert("Customer added successfully!");
+            document.getElementById('custom_id').value = data.custom_id;
+            document.getElementById('product_entry').style.display = 'block'; // Show product entry after adding customer
+        } else {
+            alert("Failed to add customer.");
+        }
+    });
+}
+
+function fetchProductDetails() {
+    const productId = document.getElementById('product_id').value;
+
+    fetch('/fetch_product', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);
+            document.getElementById('product_info').style.display = 'none';
+        } else {
+            document.getElementById('product_name_display').textContent = data.Prod_Name;
+            document.getElementById('unit_price_display').textContent = data.Unit_Price;
+            document.getElementById('product_info').style.display = 'block';
+        }
+    });
+}
+
+function calculateTotalAmount() {
+    const quantity = document.getElementById('quantity').value;
+    const unitPrice = parseFloat(document.getElementById('unit_price_display').textContent);
+
+    const totalAmount = quantity * unitPrice;
+    document.getElementById('total_amount_display').textContent = totalAmount.toFixed(2);
+}
+</script>

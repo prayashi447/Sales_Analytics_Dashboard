@@ -1,1 +1,1 @@
-# Sales_Analytics_Dashboard
+# Sales_Analytic_Dashboard

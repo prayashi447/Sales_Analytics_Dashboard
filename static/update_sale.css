@@ -1,0 +1,60 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+/* Body Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(to right, #00bcd4, #00796b);
+  color: #333;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+/* Form Container */
+.form-container {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  text-align: center;
+}
+
+/* Header Styling */
+h2 {
+  margin-bottom: 20px;
+  color: #10688a;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* Label Styling */
+label {
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+/* Input Styling */
+input[type="text"],
+input[type="number"],
+input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  color: #555;
+  transition: border-color 0.3s;
+}
+

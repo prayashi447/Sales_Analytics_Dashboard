@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Sale</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='update_sale.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Update Sale Record</h2>
+        <form action="{{ url_for('update_sale_submit', invoice_id=sale.Invoice_ID) }}" method="post">
+            <label for="Custom_ID">Customer ID:</label>
+            <input type="text" id="Custom_ID" name="Custom_ID" value="{{ sale.Custom_ID }}" required>
+
+            <label for="Prod_ID">Product ID:</label>
+            <input type="text" id="Prod_ID" name="Prod_ID" value="{{ sale.Prod_ID }}" required>
+
+            <label for="Quantity">Quantity:</label>
+            <input type="number" id="Quantity" name="Quantity" value="{{ sale.Quantity }}" required>
+
+            <label for="Total_Amount">Total Amount:</label>
+            <input type="number" id="Total_Amount" name="Total_Amount" value="{{ sale.Total_Amount }}" required>
+
+            <label for="Sale_Date">Sale Date:</label>
+            <input type="date" id="Sale_Date" name="Sale_Date" value="{{ sale.Sale_Date.strftime('%Y-%m-%d') }}" required>
+
+            <button type="submit">Update Sale</button>
+        </form>
+    </div>
+</body>
+</html>

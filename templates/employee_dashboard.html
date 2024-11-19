@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='emp_dashboard.css') }}">
+</head>
+
+<body>
+    <h2>Welcome, {{ session['username'] }}</h2>
+    <h3>Sales Data</h3>
+    
+    <div class="table-container">
+        <table>
+            <tr>
+                <th>Invoice ID</th>
+                <th>Employee Name</th>
+                <th>Customer Name</th>
+                <th>Customer Type</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
+                <th>Sale Date</th>
+                <th>Actions</th>
+            </tr>
+            {% for sale in sales_data %}
+            <tr id="sale-row-{{ sale.Invoice_ID }}">
+                <td>{{ sale.Invoice_ID }}</td>
+                <td>{{ sale.Employee_Name }}</td>
+                <td>{{ sale.Customer_Name }}</td>
+                <td>{{ sale.Customer_Type }}</td>
+                <td>{{ sale.Product_Name }}</td>
+                <td>{{ sale.Quantity }}</td>
+                <td>{{ sale.Total_Amount }}</td>
+                <td>{{ sale.Sale_Date }}</td>
+                <td>
+                    <button onclick="deleteSale({{ sale.Invoice_ID }})">Delete</button>
+                    <button onclick="window.location.href='/update_sale/{{ sale.Invoice_ID }}'">Update</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <button class="add-sale-btn" onclick="window.location.href='/employee'">Add New Sale</button>
+
+    <script>
+        function deleteSale(invoiceId) {
+            if (confirm("Are you sure you want to delete this sale?")) {
+                fetch(`/delete_sale/${invoiceId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Sale deleted successfully.");
+                        document.getElementById(`sale-row-${invoiceId}`).remove();
+                    } else {
+                        alert("Failed to delete sale.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again.");
+                });
+            }
+        }
+    </script>
+    
+    <br>
+    <p><a href="{{ url_for('login') }}" style="color: #052051; text-decoration: none; font-size: 16px; font-weight: bold; padding: 8px 16px; border-radius: 6px; background-color: #f8d7da; transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#f5c6cb'" onmouseout="this.style.backgroundColor='#f8d7da'">Logout</a></p>
+</body>
+</html>
